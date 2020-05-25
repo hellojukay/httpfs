@@ -22,6 +22,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"text/template"
 	"time"
 )
 
@@ -112,11 +113,7 @@ func dirList(w ResponseWriter, r *Request, f File) {
 	sort.Slice(dirs, func(i, j int) bool { return dirs[i].Name() < dirs[j].Name() })
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	var script = `
-alert("hello World")
-	`
-	fmt.Fprintf(w, "<script>%s</script>\n", script)
-	fmt.Fprintf(w, "<pre>\n")
+	var m = make(map[string]string)
 	for _, d := range dirs {
 		name := d.Name()
 		if d.IsDir() {
@@ -126,9 +123,14 @@ alert("hello World")
 		// part of the URL path, and not indicate the start of a query
 		// string or fragment.
 		url := url.URL{Path: name}
-		fmt.Fprintf(w, "<a href=\"%s\">%s</a>\n", url.String(), htmlReplacer.Replace(name))
+		m[url.String()] = htmlReplacer.Replace(name)
 	}
-	fmt.Fprintf(w, "</pre>\n")
+	tpl, err := template.ParseFiles("./upload.html")
+	if err != nil {
+		fmt.Printf("parse template error %s", err)
+		os.Exit(1)
+	}
+	tpl.Execute(w, m)
 }
 
 // ServeContent replies to the request using the content in the
