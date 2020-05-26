@@ -1,6 +1,6 @@
 # httpfs
 
-a simple static file server write in pure golang, suport upload。
+a simple static file server write in pure golang, support upload。
 
 # install
 ```shell
