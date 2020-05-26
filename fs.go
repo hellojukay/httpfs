@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime"
 	"mime/multipart"
@@ -678,6 +679,7 @@ func localRedirect(w ResponseWriter, r *Request, newPath string) {
 // r.URL.Path for selecting the file or directory to serve; only the
 // file or directory provided in the name argument is used.
 func ServeFile(w ResponseWriter, r *Request, name string) {
+	log.Printf("request method %s\n", r.Method)
 	if containsDotDot(r.URL.Path) {
 		// Too many programs use r.URL.Path to construct the argument to
 		// serveFile. Reject the request under the assumption that happened
@@ -730,7 +732,38 @@ func (f *fileHandler) ServeHTTP(w ResponseWriter, r *Request) {
 		upath = "/" + upath
 		r.URL.Path = upath
 	}
+	log.Printf("request method %s\n", r.Method)
+	if r.Method == "POST" {
+		uploadFile(w, r, f.root, path.Clean(upath))
+		return
+	}
 	serveFile(w, r, f.root, path.Clean(upath), true)
+}
+
+// upload file
+func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
+	log.Printf("upload file to path %s\n", name)
+	r.ParseMultipartForm(10 << 20)
+	file, handler, err := r.FormFile("file")
+	if err != nil {
+		log.Printf("read upload form failed %s\n", err)
+		return
+	}
+	var filename = handler.Filename
+	fh, err := os.Create(path.Join(dir, name, filename))
+	if err != nil {
+		log.Printf("upload file filename=%s error, create file failed %s \n", filename, err)
+		return
+	}
+	defer file.Close()
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fh.Write(fileBytes)
+	// write this byte array to our temporary file
+	// return that we have successfully uploaded our file!
+	fmt.Fprintf(w, "Successfully Uploaded File\n")
 }
 
 // httpRange specifies the byte range to be sent to the client.

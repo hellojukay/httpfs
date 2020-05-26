@@ -104,7 +104,7 @@ function uploadFile(file, i) {
 
     xhr.addEventListener('readystatechange', function(e) {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            updateProgress(i, 100) // <- Add this
+            window.location.reload()
         }
         else if (xhr.readyState == 4 && xhr.status != 200) {
             // Error. Inform the user
