@@ -842,7 +842,7 @@ func (f *fileHandler) ServeHTTP(w ResponseWriter, r *Request) {
 // upload file
 func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
 	log.Printf("upload file to path %s\n", name)
-	r.ParseMultipartForm(10 << 20)
+	r.ParseMultipartForm(1024 * 1024 * 1024 * 4)
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("read upload form failed %s\n", err)
