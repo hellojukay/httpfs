@@ -27,6 +27,104 @@ import (
 	"time"
 )
 
+var tmpText = `
+<html>
+    <style>
+a {
+    color: #369;
+}
+#drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    margin: 10px auto;
+    padding: 20px;
+    height: 100%;
+}
+#drop-area.highlight {
+    border-color: purple;
+}
+#fileElem {
+    display: none;
+}
+</style>
+    <div id="drop-area">
+        <pre>
+        {{range $href, $name := . }}
+            <a href="{{$href}}">{{$name}}</a>
+        {{ end}} 
+        </pre>
+            <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
+    </div>
+
+<script>
+        // ************************ Drag and drop ***************** //
+let dropArea = document.getElementById("drop-area")
+
+// Prevent default drag behaviors
+;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false)   
+    document.body.addEventListener(eventName, preventDefaults, false)
+})
+
+// Highlight drop area when item is dragged over it
+;['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, highlight, false)
+})
+
+;['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, unhighlight, false)
+})
+
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false)
+
+function preventDefaults (e) {
+    e.preventDefault()
+}
+
+function highlight(e) {
+    dropArea.classList.add('highlight')
+}
+
+function unhighlight(e) {
+    dropArea.classList.remove('active')
+}
+
+function handleDrop(e) {
+    var dt = e.dataTransfer
+    var files = dt.files
+    handleFiles(files)
+}
+
+function handleFiles(files) {
+    console.info(files)
+    files = [...files]
+    files.forEach(uploadFile)
+}
+
+function uploadFile(file, i) {
+    console.info('upload file',window.location.href)
+    var url = window.location.href
+    var xhr = new XMLHttpRequest()
+    var formData = new FormData()
+    xhr.open('POST', url, true)
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+    xhr.addEventListener('readystatechange', function(e) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            window.location.reload()
+        }
+        else if (xhr.readyState == 4 && xhr.status != 200) {
+            // Error. Inform the user
+        }
+    })
+    formData.append('file', file)
+    xhr.send(formData)
+}
+    </script>
+</html>
+`
+
 // A Dir implements FileSystem using the native file system restricted to a
 // specific directory tree.
 //
@@ -126,7 +224,8 @@ func dirList(w ResponseWriter, r *Request, f File) {
 		url := url.URL{Path: name}
 		m[url.String()] = htmlReplacer.Replace(name)
 	}
-	tpl, err := template.ParseFiles("./upload.html")
+	t := template.New("page")
+	tpl, err := t.Parse(tmpText)
 	if err != nil {
 		fmt.Printf("parse template error %s", err)
 		os.Exit(1)
@@ -760,6 +859,7 @@ func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer fh.Close()
 	fh.Write(fileBytes)
 	// write this byte array to our temporary file
 	// return that we have successfully uploaded our file!
