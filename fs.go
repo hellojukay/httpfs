@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime"
 	"mime/multipart"
@@ -842,7 +841,7 @@ func (f *fileHandler) ServeHTTP(w ResponseWriter, r *Request) {
 // upload file
 func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
 	log.Printf("upload file to path %s\n", name)
-	r.ParseMultipartForm(1024 * 1024 * 1024 * 4)
+	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("read upload form failed %s\n", err)
@@ -855,12 +854,17 @@ func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
 		return
 	}
 	defer file.Close()
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Println(err)
+	var buffer = make([]byte, 10*1024*1024)
+	for {
+		n, err := file.Read(buffer)
+		if n > 0 {
+			fh.Write(buffer[:n])
+		}
+		if err == io.EOF {
+			break
+		}
 	}
 	defer fh.Close()
-	fh.Write(fileBytes)
 	// write this byte array to our temporary file
 	// return that we have successfully uploaded our file!
 	fmt.Fprintf(w, "Successfully Uploaded File\n")
