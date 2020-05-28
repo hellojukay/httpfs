@@ -830,12 +830,12 @@ func (f *fileHandler) ServeHTTP(w ResponseWriter, r *Request) {
 		upath = "/" + upath
 		r.URL.Path = upath
 	}
-	log.Printf("request method %s\n", r.Method)
 	if r.Method == "POST" {
 		uploadFile(w, r, f.root, path.Clean(upath))
 		return
 	}
 	serveFile(w, r, f.root, path.Clean(upath), true)
+	log.Printf("%s %s\n", r.Method, upath)
 }
 
 // upload file
