@@ -27,7 +27,9 @@ import (
 )
 
 var tmpText = `
+<!DOCTYPE html>
 <html>
+<head>
     <style>
 a {
     color: #369;
@@ -45,7 +47,13 @@ a {
 #fileElem {
     display: none;
 }
+#progress {
+	width: 100%;
+}
 </style>
+</head>
+<body>
+	<progress id="progress" value="0" max="100"></progress>
     <div id="drop-area">
         <pre>
         {{range $href, $name := . }}
@@ -54,7 +62,6 @@ a {
         </pre>
             <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
     </div>
-
 <script>
         // ************************ Drag and drop ***************** //
 let dropArea = document.getElementById("drop-area")
@@ -102,12 +109,23 @@ function handleFiles(files) {
 }
 
 function uploadFile(file, i) {
+	let size = file.size
     console.info('upload file',window.location.href)
     var url = window.location.href
     var xhr = new XMLHttpRequest()
     var formData = new FormData()
     xhr.open('POST', url, true)
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+	let p = document.getElementById('progress')
+	xhr.upload.onprogress = function(ev) {
+		if(ev.lengthComputable) {
+			p.max = ev.total
+			p.value = ev.loaded
+			console.info(p.value)
+			console.info(p.max)
+			console.info(p)
+		}
+	}
 
     xhr.addEventListener('readystatechange', function(e) {
         if (xhr.readyState == 4 && xhr.status == 200) {
@@ -121,6 +139,8 @@ function uploadFile(file, i) {
     xhr.send(formData)
 }
     </script>
+
+</body>
 </html>
 `
 
