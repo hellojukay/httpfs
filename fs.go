@@ -30,9 +30,16 @@ var tmpText = `
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
+<style>
+html {
+	height: 100%;
+}
 a {
     color: #369;
+}
+body {
+	margin-top: 0px;
+	height: 100%;
 }
 #drop-area {
     border: 2px dashed #ccc;
@@ -47,8 +54,15 @@ a {
 #fileElem {
     display: none;
 }
-#progress {
+progress {
+    display: none;
 	width: 100%;
+    height: 10px;
+    padding-top: 1px;
+    margin-top: 0px;
+    border: 1px  #0064B4;  
+    background-color:#e6e6e6;
+	color: #0064B4; /*IE10*
 }
 </style>
 </head>
@@ -117,13 +131,11 @@ function uploadFile(file, i) {
     xhr.open('POST', url, true)
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 	let p = document.getElementById('progress')
+	p.style.display = "inline-block"
 	xhr.upload.onprogress = function(ev) {
 		if(ev.lengthComputable) {
 			p.max = ev.total
 			p.value = ev.loaded
-			console.info(p.value)
-			console.info(p.max)
-			console.info(p)
 		}
 	}
 
