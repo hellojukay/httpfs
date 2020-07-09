@@ -9,6 +9,6 @@ a simple static file server write in pure golang, support upload。
  ```
 ![demo](demo.gif)
 # feature
-* single binnary file
+* single binary file
 * cross platform
 * upload support
