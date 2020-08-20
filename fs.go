@@ -867,12 +867,11 @@ func (f *fileHandler) ServeHTTP(w ResponseWriter, r *Request) {
 		return
 	}
 	serveFile(w, r, f.root, path.Clean(upath), true)
-	log.Printf("%s %s\n", r.Method, upath)
+	log.Printf("%s %s\n", r.Method, filepath.Join(dir, upath))
 }
 
 // upload file
 func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
-	log.Printf("upload file to path %s\n", name)
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("file")
 	if err != nil {
@@ -885,6 +884,7 @@ func uploadFile(w ResponseWriter, r *Request, fs FileSystem, name string) {
 		log.Printf("upload file filename=%s error, create file failed %s \n", filename, err)
 		return
 	}
+	log.Printf("POST %s\n", fh.Name())
 	defer file.Close()
 	var buffer = make([]byte, 10*1024*1024)
 	for {
