@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 var dir string
@@ -20,8 +21,16 @@ func init() {
 }
 func main() {
 
-	http.Handle("/", FileServer(Dir(dir)))
+	http.Handle("/", FileServer(Dir(abs(dir))))
 
-	log.Printf("Serving %s on HTTP port: %s\n", dir, port)
+	log.Printf("Serving %s on HTTP port: %s\n", abs(dir), port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func abs(dir string) string {
+	if filepath.IsAbs(dir) {
+		return dir
+	}
+	pwd, _ := os.Getwd()
+	return filepath.Join(pwd, dir)
 }
