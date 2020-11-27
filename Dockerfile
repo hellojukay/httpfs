@@ -3,7 +3,7 @@ RUN mkdir /build
 ADD . /build/
 WORKDIR /build/
 ENV CGO_ENABLED=0
-RUN go build -o httpfs main.go
+RUN go build -o httpfs
 
 FROM alpine:3.12.1
 RUN apk --no-cache add ca-certificates
