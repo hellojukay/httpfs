@@ -21,4 +21,4 @@ jobs:
       with:
         stable: 'true'
         go-version: '^1.13.1'
-    - run: go get github.com/mitchellh/gox 
+    - run: go get github.com/mitchellh/gox  && gox
