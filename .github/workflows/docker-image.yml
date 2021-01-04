@@ -22,7 +22,6 @@ jobs:
         stable: 'true'
         go-version: '^1.13.1'
     - run: go get github.com/mitchellh/gox  && perl build.pl
-i        ./build.sh
   release:
     runs-on: ubuntu-latest
     needs: [build]
