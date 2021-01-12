@@ -1,6 +1,8 @@
 # httpfs
 a simple static file server write in pure golang, support upload。
 
+[简体中文](README_zh.md)
+
 ![travis](https://travis-ci.com/hellojukay/httpfs.svg?branch=master)
 # install
 ```shell
