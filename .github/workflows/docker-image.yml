@@ -29,3 +29,4 @@ jobs:
         asset_name: mything
         tag: ${{ github.ref }}
         overwrite: true
+        file_glob: true
