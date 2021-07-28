@@ -10,5 +10,5 @@
 ![demo](demo.gif)
 # 特性
 * 单文件，免安装，静态编译无依赖
-* 支持linux,windows,Darwin 等
+* 支持Linux,Windows,Darwin 等
 * 拖拽上传
