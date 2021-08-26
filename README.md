@@ -1,16 +1,17 @@
 # httpfs
-a simple static file server write in pure golang, support upload。
+一个简单的静态文件服务器，支持拖拽上传文件，目的在于解决内网共享文件的问题。
 
-[简体中文](README_zh.md)
+[English](README_en.md)
+
 
 ![travis](https://travis-ci.com/hellojukay/httpfs.svg?branch=master)
-# install
+#  安装
 ```shell
-// build require golang 1.11+
+// 需要 golang 1.16 以及以上版本
  go get github.com/hellojukay/httpfs
  ```
 ![demo](demo.gif)
-# feature
-* single binary file
-* cross platform
-* upload support
+# 特性
+* 单文件，免安装，静态编译无依赖
+* 支持Linux,Windows,Darwin 等
+* 拖拽上传
