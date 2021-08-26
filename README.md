@@ -4,7 +4,8 @@
 [English](README_en.md)
 
 
-![travis](https://travis-ci.com/hellojukay/httpfs.svg?branch=master)
+[![Docker Image CI](https://github.com/hellojukay/httpfs/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/hellojukay/httpfs/actions/workflows/docker-image.yml)
+
 #  安装
 ```shell
 // 需要 golang 1.16 以及以上版本
@@ -13,5 +14,5 @@
 ![demo](demo.gif)
 # 特性
 * 单文件，免安装，静态编译无依赖
-* 支持Linux,Windows,Darwin 等
+* 支持Linux,Windows,Mac OSX 等
 * 拖拽上传

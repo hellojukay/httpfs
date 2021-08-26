@@ -1,9 +1,10 @@
 # httpfs
 a simple static file server write in pure golang, support upload。
 
-[简体中文](README_zh.md)
 
-![travis](https://travis-ci.com/hellojukay/httpfs.svg?branch=master)
+[![Docker Image CI](https://github.com/hellojukay/httpfs/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/hellojukay/httpfs/actions/workflows/docker-image.yml)
+
+
 # install
 ```shell
 // build require golang 1.16+
