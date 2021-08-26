@@ -4,7 +4,7 @@
 [English](README_en.md)
 
 
-[![Docker Image CI](https://github.com/hellojukay/httpfs/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/hellojukay/httpfs/actions/workflows/docker-image.yml)
+[![build](https://github.com/hellojukay/httpfs/actions/workflows/go-build.yml/badge.svg)](https://github.com/hellojukay/httpfs/actions/workflows/go-build.yml)
 
 #  安装
 ```shell
