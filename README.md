@@ -4,7 +4,7 @@
 [English](README_en.md)
 
 
-[![build](https://github.com/hellojukay/httpfs/actions/workflows/go-build.yml/badge.svg)](https://github.com/hellojukay/httpfs/actions/workflows/go-build.yml)
+[![build](https://github.com/hellojukay/httpfs/actions/workflows/go-build.yml/badge.svg?event=push)](https://github.com/hellojukay/httpfs/actions/workflows/go-build.yml)
 
 #  安装
 ```shell
