@@ -9,6 +9,7 @@ sub command_exsits {
     return $exit == 0;
 }
 
+$ENV{CGO_ENABLED} = 0;
 if(command_exsits('gox')) {
     print("[INFO] gox command found , now run gox build.\n");
     my $arch="darwin/arm64 darwin/amd64 linux/386 linux/amd64 windows/amd64 windows/386";
