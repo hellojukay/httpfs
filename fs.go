@@ -605,19 +605,19 @@ func serveFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name strin
 	}
 
 	// use contents of index.html for directory, if present
-	if d.IsDir() {
-		index := strings.TrimSuffix(name, "/") + indexPage
-		ff, err := fs.Open(index)
-		if err == nil {
-			defer ff.Close()
-			dd, err := ff.Stat()
-			if err == nil {
-				name = index
-				d = dd
-				f = ff
-			}
-		}
-	}
+	// if d.IsDir() {
+	// 	index := strings.TrimSuffix(name, "/") + indexPage
+	// 	ff, err := fs.Open(index)
+	// 	if err == nil {
+	// 		defer ff.Close()
+	// 		dd, err := ff.Stat()
+	// 		if err == nil {
+	// 			name = index
+	// 			d = dd
+	// 			f = ff
+	// 		}
+	// 	}
+	// }
 
 	// Still a directory? (we didn't find an index.html file)
 	if d.IsDir() {
