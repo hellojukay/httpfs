@@ -8,7 +8,10 @@ a simple static file server write in pure golang, support upload。
 # install
 ```shell
 // build require golang 1.16+
- go get github.com/hellojukay/httpfs
+ go install github.com/hellojukay/httpfs
+
+ httpfs --version
+v0.2.13 h1:PMdqIhrKOVJx+/wtPUK67bbKx23aHzpc5m4CgnHo6gU=
  ```
 ![demo](demo.gif)
 # feature

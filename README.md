@@ -9,7 +9,10 @@
 #  安装
 ```shell
 // 需要 golang 1.16 以及以上版本
- go get github.com/hellojukay/httpfs
+ go install github.com/hellojukay/httpfs@latest
+ 
+httpfs --version
+v0.2.13 h1:PMdqIhrKOVJx+/wtPUK67bbKx23aHzpc5m4CgnHo6gU=
  ```
 ![demo](demo.gif)
 # 特性
