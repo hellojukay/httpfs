@@ -5,13 +5,7 @@ on:
     tags: '*'
 
 jobs:
-  docker-build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag hellojukay/httpfs:$(date +%s)
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -20,7 +14,11 @@ jobs:
         stable: 'true'
         go-version: '^1.16.1'
     - name: build
-      run: go get github.com/mitchellh/gox  && mkdir dist && perl build.pl && ls -al dist/
+      run: |
+        go get github.com/mitchellh/gox
+        mkdir dist
+        perl build.pl
+        ls -al dist/
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
