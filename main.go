@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,13 +11,15 @@ import (
 )
 
 var dir string
-var port string
+var port int
 var version bool
+var open bool
 
 func init() {
-	flag.StringVar(&port, "p", "8100", "port to serve on")
+	flag.IntVar(&port, "p", 8100, "port to serve on")
 	flag.StringVar(&dir, "path", "./", "the directory of static file to host")
 	flag.BoolVar(&version, "version", false, "print program version")
+	flag.BoolVar(&open, "open", false, "open with default browser")
 	flag.Parse()
 
 	if version {
@@ -32,10 +35,17 @@ func init() {
 }
 func main() {
 
-	http.Handle("/", FileServer(Dir(abs(dir))))
+	if open {
+		go func() {
+			if err := Open(fmt.Sprintf("http://127.0.0.1:%d", port)); err != nil {
+				log.Printf("can not open default browser %s", err)
+			}
 
-	log.Printf("Serving %s on HTTP port: %s\n", abs(dir), port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+		}()
+	}
+	http.Handle("/", FileServer(Dir(abs(dir))))
+	log.Printf("Serving %s on HTTP port: %d\n", abs(dir), port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }
 
 func abs(dir string) string {
