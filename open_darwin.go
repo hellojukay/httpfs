@@ -3,6 +3,11 @@
 
 package main
 
+import (
+	"fmt"
+	"os/exec"
+)
+
 func Open(url string) error {
 	bin, err := exec.LookPath("open")
 	if err != nil {

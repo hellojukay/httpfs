@@ -3,6 +3,12 @@
 
 package main
 
+import (
+	"fmt"
+	"os/exec"
+	"time"
+)
+
 // start up cmd.exe then run start command to open default browser
 func Open(url string) error {
 	bin, err := exec.LookPath("cmd")
