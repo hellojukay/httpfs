@@ -10,10 +10,12 @@ import (
 	"runtime/debug"
 )
 
-var dir string
-var port int
-var version bool
-var open bool
+var (
+	dir     string
+	port    int
+	version bool
+	open    bool
+)
 
 func init() {
 	flag.IntVar(&port, "p", 8100, "port to serve on")
@@ -34,15 +36,14 @@ func init() {
 	}
 }
 func main() {
-
 	if open {
 		go func() {
 			if err := Open(fmt.Sprintf("http://127.0.0.1:%d", port)); err != nil {
 				log.Printf("can not open default browser %s", err)
 			}
-
 		}()
 	}
+
 	http.Handle("/", FileServer(Dir(abs(dir))))
 	log.Printf("Serving %s on HTTP port: %d\n", abs(dir), port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
