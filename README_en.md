@@ -15,6 +15,6 @@ v0.2.13 h1:PMdqIhrKOVJx+/wtPUK67bbKx23aHzpc5m4CgnHo6gU=
  ```
 ![demo](demo.gif)
 # feature
-* single binary file
-* cross platform
-* upload support
+* Single binary file
+* Cross platform
+* Upload support
