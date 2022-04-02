@@ -38,7 +38,7 @@ func init() {
 func main() {
 	if open {
 		go func() {
-			if err := Open(fmt.Sprintf("http://127.0.0.1:%d", port)); err != nil {
+			if err := Open(fmt.Sprintf("http://%s:%d", IP(), port)); err != nil {
 				log.Printf("can not open default browser %s", err)
 			}
 		}()
