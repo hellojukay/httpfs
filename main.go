@@ -35,6 +35,7 @@ func init() {
 		dir, _ = os.Getwd()
 	}
 }
+
 func main() {
 	if open {
 		go func() {
