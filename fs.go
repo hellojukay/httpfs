@@ -721,7 +721,7 @@ type fileHandler struct {
 // To use the operating system's file system implementation,
 // use http.Dir:
 //
-//     http.Handle("/", http.FileServer(http.Dir("/tmp")))
+//	http.Handle("/", http.FileServer(http.Dir("/tmp")))
 //
 // As a special case, the returned file server redirects any request
 // ending in "/index.html" to the same path, without the final
@@ -737,7 +737,10 @@ func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = upath
 	}
 	if r.Method == "POST" {
-		uploadFile(w, r, f.root, path.Clean(upath))
+		if err := uploadFile(w, r, f.root, path.Clean(upath)); err != nil {
+			log.Printf("upload file failed %s\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		return
 	}
 	serveFile(w, r, f.root, path.Clean(upath), true)
@@ -745,20 +748,29 @@ func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // upload file
-func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name string) {
+func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name string) error {
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("read upload form failed %s\n", err)
-		return
+		return err
 	}
 	var filename = handler.Filename
+	log.Printf("upload file filename=%s to directory %s", filename, path.Join(dir, name))
+	if _, err := os.Stat(path.Join(dir, name)); err != nil {
+		if os.IsNotExist(err) {
+			log.Printf("%s directory no exist, create it \n", path.Join(dir, name))
+			if err = os.MkdirAll(path.Join(dir, name), 0731); err != nil {
+				return err
+			}
+		}
+	}
 	fh, err := os.Create(path.Join(dir, name, filename))
 	if err != nil {
 		log.Printf("upload file filename=%s error, create file failed %s \n", filename, err)
-		return
+		return err
 	}
-	log.Printf("POST %s\n", fh.Name())
+	log.Printf("Writing %s\n", fh.Name())
 	defer file.Close()
 	var buffer = make([]byte, 10*1024*1024)
 	for {
@@ -773,7 +785,8 @@ func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name stri
 	defer fh.Close()
 	// write this byte array to our temporary file
 	// return that we have successfully uploaded our file!
-	fmt.Fprintf(w, "Successfully Uploaded File\n")
+	log.Printf("Successfully Uploaded File %s \n", path.Join(dir, name, filename))
+	return nil
 }
 
 // httpRange specifies the byte range to be sent to the client.
