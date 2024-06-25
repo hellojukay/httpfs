@@ -12,10 +12,10 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         stable: 'true'
-        go-version: '^1.16.1'
+        go-version: '^1.19.1'
     - name: build
       run: |
-        go get github.com/mitchellh/gox
+        go install github.com/mitchellh/gox@v1.0.1
         mkdir dist
         perl .github/build.pl
         ls -al dist/
