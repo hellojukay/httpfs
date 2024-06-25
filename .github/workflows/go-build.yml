@@ -15,7 +15,7 @@ jobs:
         go-version: '^1.16.1'
     - name: build
       run: |
-        go get github.com/mitchellh/gox@latest
+        go install github.com/mitchellh/gox@latest
         mkdir dist
         perl .github/build.pl 
         ls -al dist/
