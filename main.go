@@ -32,7 +32,11 @@ func init() {
 		os.Exit(0)
 	}
 	if dir == "./" {
-		dir, _ = os.Getwd()
+		d, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+		dir = d
 	}
 }
 
