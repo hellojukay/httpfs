@@ -14,7 +14,15 @@
 httpfs --version
 v0.2.13 h1:PMdqIhrKOVJx+/wtPUK67bbKx23aHzpc5m4CgnHo6gU=
  ```
+
+ 命令行上传文件
+ ```shell
+ curl -T filename http://127.0.0.1:8080/direcotry/
+ ```
+
+ 浏览器上传文件
 ![demo](demo.gif)
+
 # 特性
 * 单文件，免安装，静态编译无依赖
 * 支持Linux,Windows,Mac OSX 等

@@ -736,7 +736,7 @@ func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		upath = "/" + upath
 		r.URL.Path = upath
 	}
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost || r.Method == http.MethodPut {
 		if err := uploadFile(w, r, f.root, path.Clean(upath)); err != nil {
 			log.Printf("upload file failed %s\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -750,12 +750,12 @@ func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // upload file
 func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name string) error {
 	r.ParseMultipartForm(32 << 20)
-	file, handler, err := r.FormFile("file")
+	file, filename, err := getFilefromRequest(r)
 	if err != nil {
 		log.Printf("read upload form failed %s\n", err)
 		return err
 	}
-	var filename = handler.Filename
+	defer file.Close()
 	log.Printf("upload file filename=%s to directory %s", filename, path.Join(dir, name))
 	if _, err := os.Stat(path.Join(dir, name)); err != nil {
 		if os.IsNotExist(err) {
@@ -771,7 +771,6 @@ func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name stri
 		return err
 	}
 	log.Printf("Writing %s\n", fh.Name())
-	defer file.Close()
 	var buffer = make([]byte, 10*1024*1024)
 	for {
 		n, err := file.Read(buffer)
@@ -787,6 +786,20 @@ func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name stri
 	// return that we have successfully uploaded our file!
 	log.Printf("Successfully Uploaded File %s \n", path.Join(dir, name, filename))
 	return nil
+}
+
+func getFilefromRequest(r *http.Request) (io.ReadCloser, string, error) {
+	if r.Method != http.MethodPut && r.Method != http.MethodPost {
+		return nil, "", errors.New("only GET and HEAD method support")
+	}
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		return r.Body, path.Base(r.URL.Path), nil
+	}
+	file, handler, err := r.FormFile("file")
+	if err != nil {
+		return r.Body, path.Base(r.URL.Path), nil
+	}
+	return file, handler.Filename, nil
 }
 
 // httpRange specifies the byte range to be sent to the client.
