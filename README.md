@@ -12,8 +12,8 @@
  go install github.com/hellojukay/httpfs@latest
  
 httpfs --version
-v0.2.13 h1:PMdqIhrKOVJx+/wtPUK67bbKx23aHzpc5m4CgnHo6gU=
- ```
+v0.5.0 h1:tgPLWu1eBpYuH9dSOl1xdODpbYBbS9CeMp84BfcCOcw=
+```
 
  命令行上传文件
  ```shell
