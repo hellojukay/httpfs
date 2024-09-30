@@ -12,6 +12,7 @@
             border-radius: 20px;
             margin: 10px auto;
             padding: 20px;
+            min-height: 200px;
         }
 
         #drop-area.highlight {
@@ -39,6 +40,7 @@
 <body>
     <progress id="progress" value="0" max="100"></progress>
     <div id="drop-area">
+
         <pre>
         {{range $href, $name := . }}
             <a href="{{$href}}">{{$name}}</a>
@@ -47,6 +49,27 @@
         <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
     </div>
     <script>
+
+       var div = document.getElementById('drop-area');
+       var canvas = document.createElement('canvas');
+       var ctx = canvas.getContext('2d');
+       canvas.width = div.offsetWidth;
+       canvas.height = div.offsetHeight;
+       ctx.font = "40px Arial";
+       ctx.fillStyle = "rgba(128, 128, 128, 0.5)";
+       ctx.textAlign = "center";
+       ctx.textBaseline = "middle";
+       ctx.fillText("Drag & Drop a File", div.offsetWidth / 2, div.offsetHeight / 2);
+       div.style.position = "relative";
+       div.appendChild(canvas);
+       canvas.style.position = "absolute";
+       canvas.style.top = 0;
+       canvas.style.left = 0;
+       canvas.style.zIndex = -1;
+       canvas.style.pointerEvents = "none";
+     
+
+
         let dropArea = document.getElementById("drop-area")
 
             ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
