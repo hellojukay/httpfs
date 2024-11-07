@@ -736,8 +736,15 @@ func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		upath = "/" + upath
 		r.URL.Path = upath
 	}
-	if r.Method == http.MethodPost || r.Method == http.MethodPut {
+	if r.Method == http.MethodPost {
 		if err := uploadFile(w, r, f.root, path.Clean(upath)); err != nil {
+			log.Printf("upload file failed %s\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		return
+	}
+	if r.Method == http.MethodPut {
+		if err := uploadFile(w, r, f.root, path.Dir(upath)); err != nil {
 			log.Printf("upload file failed %s\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}
@@ -755,6 +762,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name stri
 		log.Printf("read upload form failed %s\n", err)
 		return err
 	}
+
 	defer file.Close()
 	log.Printf("upload file filename=%s to directory %s", filename, path.Join(dir, name))
 	if _, err := os.Stat(path.Join(dir, name)); err != nil {
